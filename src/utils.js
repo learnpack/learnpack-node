@@ -23,18 +23,30 @@ const cleanStdout = (buffer, inputs) => {
 
 const checkPython3 = () => {
   try {
-    let result = child_process.execSync('python -c "import platform; print(platform.python_version())"').toString();
-    let { stdout } = result;
-    if('3' === stdout.split(".")[0]) return true
+    let result = child_process.execSync('python -c "import platform; print(platform.python_version())"').toString()
+    const python = result.split(".")
+
+    if(python.length > 0 && '3' === python[0]) return true
+    else{
+      console.log("Python version: ",python)
+      return true
+    }
   } 
   catch (error) {
     return false
   }
 }
 
-const dispatch = (action, message, status) => {
-  const action = { action, message, status }
-  await this.config.runHook('action', action)
+const com = (_) => {
+  return {
+    error: msg => {
+      _.log('internal-error', [ msg ])
+      throw msg
+    },
+    clean: () => _.clean(),
+    log: (...args) => _.log(...args),
+    success: (stdout) => _.log('compiler-success', [ stdout ]),
+  }
 }
 
-module.exports = { getMatches, cleanStdout };
+module.exports = { getMatches, cleanStdout, checkPython3, com };

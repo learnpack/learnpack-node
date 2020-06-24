@@ -5,6 +5,12 @@ class HelloCommand extends Command {
     const {flags} = this.parse(HelloCommand)
     const name = flags.name || 'world'
     this.log(`hello ${name} from ./src/commands/hello.js`)
+
+    await this.config.runHook('action', {
+      action: 'compile',
+      socket: null,
+      exercise: null,
+    })
   }
 }
 
