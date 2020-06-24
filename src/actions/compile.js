@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { python } = require('compile-run');
-const { getMatches, cleanStdout } = require('./_utils.js.js.js');
+const { getMatches, cleanStdout } = require('./_utils.js');
 
 module.exports = async function ({ execute, socket }) {
 

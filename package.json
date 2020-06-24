@@ -6,7 +6,8 @@
   "bugs": "https://github.com/learnpack/python-compiler/issues",
   "dependencies": {
     "@oclif/command": "^1.6.1",
-    "@oclif/config": "^1.15.1"
+    "@oclif/config": "^1.15.1",
+    "compile-run": "^2.3.2"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
