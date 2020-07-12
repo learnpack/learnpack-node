@@ -7,7 +7,8 @@
   "dependencies": {
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
-    "compile-run": "^2.3.2"
+    "compile-run": "^2.3.2",
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
