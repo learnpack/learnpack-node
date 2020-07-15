@@ -3,10 +3,11 @@
   "description": "Python Compiler for learnpack tutorials",
   "version": "0.0.1",
   "author": "Alejandro Sanchez @alesanchezr",
-  "bugs": "https://github.com/learnpack/python-compiler/issues",
+  "bugs": "https://github.com/learnpack/learnpack/issues",
   "dependencies": {
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
+    "chalk": "^4.1.0",
     "compile-run": "^2.3.2",
     "shelljs": "^0.8.4"
   },

@@ -7,7 +7,7 @@ const shell = require('shelljs')
 module.exports = (pluginConfig) => {
   return async (args) => {
     const { action, exercise, socket, configuration } = args
-    console.log("asadsadsads", configuration)
+
     if(pluginConfig.language === undefined) throw Error(`Missing language on the plugin configuration object`)
 
     if(typeof action !== "string"){

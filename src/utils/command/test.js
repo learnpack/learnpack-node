@@ -11,19 +11,18 @@ const TestingError = (messages) => {
 module.exports = {
   TestingError,
   default: async function(args){
-    const { action, configuration, slug } = args;
+    const { action, configuration, socket, exercise } = args;
 
-    if (!fs.existsSync(`${configuration.configPath.base}/reports`)){
+    if (!fs.existsSync(`${configuration.dirPath}/reports`)){
       // reports directory
-      fs.mkdirSync(`${configuration.configPath.base}/reports`);
+      fs.mkdirSync(`${configuration.dirPath}/reports`);
     }
 
+    // compile
     const stdout = await action.run(args)
 
-    configuration.exercises = configuration.exercises.map(e => {
-      if(e.slug === slug) e.done = true;
-      return e;
-    });
+    // mark exercise as done
+    exercise.done = true;
 
     return stdout
   }

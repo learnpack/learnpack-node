@@ -1,10 +1,9 @@
 const fs = require('fs')
+const chalk = require("chalk")
 const shell = require('shelljs')
 const { Utils, TestingError } = require('./utils/index.js')
 
 module.exports =  {
-  capture: "sys",
-  color: "yes",
   validate: async function({ exercise, configuration }){
 
     if (!shell.which('pytest')) {
@@ -28,7 +27,7 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("stdin",metafunc.configuration.getoption('stdin'))
     if 'app' in metafunc.fixturenames:
         try:
-          sys.path.append('${configuration.configPath.output}')
+          sys.path.append('${configuration.outputPath}')
           import cached_app
           metafunc.parametrize("app",[cached_app.execute_app])
         except SyntaxError:
@@ -46,8 +45,9 @@ def pytest_generate_tests(metafunc):
   run: async ({ exercise, socket, configuration }) => {
 
     const getEntry = () => {
+      console.log(exercise);
       let entryPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('test.py') > -1 || f.indexOf('tests.py') > -1)
-      if (!fs.existsSync(entryPath)) throw TestingError(`🚫 No tests.py script found on the exercise files`)
+      if (!fs.existsSync(entryPath)) throw TestingError(`🚫 No tests.py script found on the exercise in ${entryPath}`)
   
       const appPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.py') > -1)
       if (fs.existsSync(appPath)){
@@ -58,7 +58,7 @@ def pytest_generate_tests(metafunc):
           // Adding main execute_app function for all the code
           content = `def execute_app():\n${Utils.indent(content, 4)}`
         }
-        const directory = `${configuration.configPath.output}/cached_app.py`
+        const directory = `${configuration.outputPath}/cached_app.py`
         fs.writeFileSync(directory, content)
       }
       else if(configuration.grading === "isolated") throw TestingError(`🚫 No app.py script found on the exercise files`)
@@ -74,10 +74,10 @@ def pytest_generate_tests(metafunc):
         const count = Utils.getMatches(/input\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content)
         let answers = (count.length == 0) ? [] : await socket.ask(count)
 
-        return `pytest ${getEntry()} --testdox --capture=${this.capture} --color=${this.color} --stdin='${JSON.stringify(answers)}'`
+        return `pytest ${getEntry()} --testdox --capture=sys --color=yes --stdin='${JSON.stringify(answers)}'`
       }
       else{
-        return `pytest ${getEntry()} --testdox --capture=${this.capture} --color=${this.color}`
+        return `pytest ${getEntry()} --testdox --capture=sys --color=yes`
       }
     }
 
@@ -95,7 +95,9 @@ def pytest_generate_tests(metafunc):
 
       let _stdout = [rawStdout]
       if(errors.length > 0){
-        msg = `\n\n   ${'Your code must to comply with the following tests:'.red} \n\n${[...new Set(errors)].map((e,i) => `     ${e.status !== 'failed' ? '✓ (done)'.green.bold : 'x (fail)'.red.bold} ${i}. ${e.title.white}`).join('\n')} \n\n`
+        msg = `\n\n   
+          ${chalk.red('Your code must to comply with the following tests:')} \n\n
+          ${[...new Set(errors)].map((e,i) => `     ${e.status !== 'failed' ? chalk.green.bold('✓ (done)') : chalk.red.bold('x (fail)')} ${i}. ${chalk.white(e.title)}`).join('\n')} \n\n`
         _stdout.push(msg)
       }
       return _stdout
@@ -111,7 +113,7 @@ def pytest_generate_tests(metafunc):
       stderr = resp.stderr
       if(code != 0) break
     }
-    if(code != 0) return getStdout(stdout || stderr)
+    if(code != 0) throw TestingError(getStdout(stdout || stderr).join())
     else return stdout
   }
 }
