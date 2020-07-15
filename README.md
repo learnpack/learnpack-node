@@ -19,7 +19,7 @@ $ npm install -g learnpack-python
 $ oclif-example COMMAND
 running command...
 $ oclif-example (-v|--version|version)
-learnpack-python/0.0.1 darwin-x64 node-v10.17.0
+learnpack-python/0.0.2 darwin-x64 node-v10.17.0
 $ oclif-example --help [COMMAND]
 USAGE
   $ oclif-example COMMAND
@@ -28,23 +28,5 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`oclif-example hello`](#oclif-example-hello)
 
-## `oclif-example hello`
-
-Describe the command here
-
-```
-USAGE
-  $ oclif-example hello
-
-OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
-```
-
-_See code: [src/commands/hello.js](https://github.com/learnpack/python-compiler/blob/v0.0.1/src/commands/hello.js)_
 <!-- commandsstop -->
