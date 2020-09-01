@@ -9,7 +9,7 @@ module.exports = {
     return true
   },
   run: async function ({ exercise, socket }) {
-    console.log("Compiling python for ", exercise)
+
     let entryPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.py') > -1);
     if(!entryPath) throw new Error("No app.py entry file");
 
@@ -20,6 +20,7 @@ module.exports = {
     const result = await python.runFile(entryPath, { stdin: inputs.join('\n'), executionPath: 'python3' })
     if(result.exitCode > 0) throw CompilationError(result.stderr);
     return Utils.cleanStdout(result.stdout, count)
+    
   },
 }
   
