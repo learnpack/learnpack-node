@@ -1,7 +1,7 @@
 {
   "name": "learnpack-python",
   "description": "Python Compiler for learnpack tutorials",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Alejandro Sanchez @alesanchezr",
   "bugs": "https://github.com/learnpack/learnpack/issues",
   "dependencies": {
