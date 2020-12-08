@@ -15,11 +15,11 @@ Python Compiler for learnpack tutorials
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g learnpack-python
+$ npm install -g learnpack-node
 $ oclif-example COMMAND
 running command...
 $ oclif-example (-v|--version|version)
-learnpack-python/0.0.31 darwin-x64 node-v10.17.0
+learnpack-node/0.0.1 darwin-x64 node-v10.17.0
 $ oclif-example --help [COMMAND]
 USAGE
   $ oclif-example COMMAND
