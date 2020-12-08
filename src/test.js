@@ -24,7 +24,12 @@ def pytest_addoption(parser):
         help="json with the stdin to pass to test functions")
 def pytest_generate_tests(metafunc):
     if 'stdin' in metafunc.fixturenames:
-        metafunc.parametrize("stdin",metafunc.configuration.getoption('stdin'))
+      if hasattr(metafunc,"config"):
+          metafunc.parametrize("stdin",metafunc.config.getoption('stdin'))
+      elif hasattr(metafunc,"configuration"):
+          metafunc.parametrize("stdin",metafunc.configuration.getoption('stdin'))
+      else:
+          raise Exception("Imposible to retrieve text configuration object")
     if 'app' in metafunc.fixturenames:
         try:
           sys.path.append('${configuration.outputPath}')
@@ -113,6 +118,7 @@ def pytest_generate_tests(metafunc):
       stderr = resp.stderr
       if(code != 0) break
     }
+    
     if(code != 0) throw TestingError(getStdout(stdout || stderr).join())
     else return stdout
   }
