@@ -8,8 +8,9 @@ module.exports = (pluginConfig) => {
   return async (args) => {
     const { action, exercise, socket, configuration } = args
 
+    
     if(pluginConfig.language === undefined) throw Error(`Missing language on the plugin configuration object`)
-
+    
     if(typeof action !== "string"){
       throw Error("Missing action property on hook details")
     } 
@@ -23,6 +24,11 @@ module.exports = (pluginConfig) => {
       console.log(`Ignoring ${action}`)
       return () => null
     } 
+    
+    // ignore if the plugin language its not the same as the exercise language
+    if(exercise.language !== pluginConfig.language){
+      return () => null
+    }
     
     if( !exercise.files || exercise.files.length == 0){
       throw Error(`No files to process`)

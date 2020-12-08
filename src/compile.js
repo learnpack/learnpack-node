@@ -1,8 +1,10 @@
 const fs = require('fs');
+const path = require('path');
 const { node } = require('compile-run');
 const { Utils, CompilationError } = require('./utils/index.js');
 
 module.exports = {
+  validate: () => true,
   run: async function ({ exercise, socket }) {
 
     let entryPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);

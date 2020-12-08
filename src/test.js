@@ -1,16 +1,10 @@
 const fs = require('fs')
-const babelJest = require('babel-jest');
-const path = require('path');
+const path = require('path')
 const chalk = require("chalk")
 const shell = require('shelljs')
-const nodeModulesPath = path.resolve(__dirname, '../node_modules');
-const { TestingError } = require('./utils/index.js')
-
-const transformer = babelJest.createTransformer({
-  presets: [ nodeModulesPath+'/@babel/preset-env' ],
-  babelrc: false,
-  configFile: false,
-});
+const transformer = require.resolve('./_babelTransformer')
+const nodeModulesPath = path.resolve(__dirname, '../node_modules')
+const { Utils, TestingError } = require('./utils/index.js')
 
 module.exports =  {
   validate: async function({ exercise, configuration }){
@@ -35,7 +29,7 @@ module.exports =  {
 
     const getEntry = () => {
 
-      let testsPath = files.map(f => f.path).find(f => f.indexOf('test.js') > -1 || f.indexOf('tests.js') > -1);
+      let testsPath = exercise.files.map(f => f.path).find(f => f.indexOf('test.js') > -1 || f.indexOf('tests.js') > -1);
       if (!fs.existsSync(testsPath))  throw TestingError(`🚫 No test script found on the exercise files`);
   
       return testsPath;
@@ -43,19 +37,19 @@ module.exports =  {
 
     const getCommands = async function(){
 
-      const appPath = files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);
+      const appPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);
       const content = fs.readFileSync(appPath, "utf8");
-      const count = getMatches(/prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
+      const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
       let answers = (count.length == 0) ? [] : await socket.ask(count);
 
-      jestConfig.reporters = [[ __dirname+'/_reporter.js', { reportPath: `${configuration.dirPath}/reports/${slug}.json` }]];
+      jestConfig.reporters = [[ __dirname+'/_reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
       return `jest --config '${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
     }
 
     const getStdout = (rawStdout) => {
       let _stdout = [];
-      if (fs.existsSync(`${configuration.dirPath}/reports/${slug}.json`)){
-        const _text = fs.readFileSync(`${configuration.dirPath}/reports/${slug}.json`);
+      if (fs.existsSync(`${configuration.dirPath}/reports/${exercise.slug}.json`)){
+        const _text = fs.readFileSync(`${configuration.dirPath}/reports/${exercise.slug}.json`);
         const errors = JSON.parse(_text);
   
         _stdout = errors.testResults.map(r => r.message);
@@ -65,11 +59,12 @@ module.exports =  {
           _stdout.push(msg);
         }
       }
-      else throw TestingError("Could not find the error report for "+slug);
+      else throw TestingError("Could not find the error report for "+exercise.slug);
       return _stdout
     }
 
     let commands = await getCommands()
+
     if(!Array.isArray(commands)) commands = [commands]
     let stdout, stderr, code = [null, null, null]
     for(let cycle = 0; cycle < commands.length; cycle++){
@@ -79,8 +74,8 @@ module.exports =  {
       stderr = resp.stderr
       if(code != 0) break
     }
-    
+
     if(code != 0) throw TestingError(getStdout(stdout || stderr).join())
-    else return stdout
+    else return stdout && stdout.length > 0 ? stdout : chalk.green("✔ All tests have passed")
   }
 }

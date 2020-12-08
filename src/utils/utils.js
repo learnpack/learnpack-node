@@ -1,3 +1,4 @@
+const chalk = require("chalk")
 
 const getMatches = (reg, content) => {
     let inputs = [];
@@ -60,4 +61,18 @@ const indent = (string, count = 1, options) => {
 	return string.replace(regex, options.indent.repeat(count));
 };
 
-module.exports = { getMatches, cleanStdout, indent };
+const Console = {
+    // _debug: true,
+    _debug: process.env.DEBUG == 'true',
+    startDebug: function(){ this._debug = true; },
+    log: (msg, ...args) => console.log(chalk.gray(msg), ...args),
+    error: (msg, ...args) => console.log(chalk.red('⨉ '+msg), ...args),
+    success: (msg, ...args) => console.log(chalk.green('✓ '+msg), ...args),
+    info: (msg, ...args) => console.log(chalk.blue('ⓘ '+msg), ...args),
+    help: (msg) => console.log(`${chalk.white.bold('⚠ help:')} ${chalk.white(msg)}`),
+    debug(...args){
+        this._debug && console.log(chalk.magentaBright(`⚠ debug: `), args)
+    }
+}
+
+module.exports = { getMatches, cleanStdout, indent, Console };
