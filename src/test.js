@@ -3,8 +3,10 @@ const path = require('path')
 const chalk = require("chalk")
 const shell = require('shelljs')
 const transformer = require.resolve('./_babelTransformer')
-const nodeModulesPath = path.resolve(__dirname, '../node_modules')
 const { Utils, TestingError } = require('./utils/index.js')
+
+let nodeModulesPath = path.dirname(require.resolve('jest'))
+nodeModulesPath = nodeModulesPath.substr(0,nodeModulesPath.indexOf("node_modules")) + "node_modules/"
 
 module.exports =  {
   validate: async function({ exercise, configuration }){
@@ -41,7 +43,7 @@ module.exports =  {
       const content = fs.readFileSync(appPath, "utf8");
       const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
       let answers = (count.length == 0) ? [] : await socket.ask(count);
-
+      
       jestConfig.reporters = [[ __dirname+'/_reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
       return `jest --config '${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
     }
