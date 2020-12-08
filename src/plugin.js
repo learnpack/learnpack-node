@@ -1,7 +1,7 @@
 const { plugin } = require("./utils/index")
 
 module.exports = plugin({
-    language: "python3",
+    language: "node",
     compile: require('./compile'),
     test: require('./test'),
 })

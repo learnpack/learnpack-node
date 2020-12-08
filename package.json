@@ -1,7 +1,7 @@
 {
-  "name": "learnpack-python",
-  "description": "Python Compiler for learnpack tutorials",
-  "version": "0.0.31",
+  "name": "learnpack-node",
+  "description": "Node compiler for learnpack tutorials",
+  "version": "0.0.1",
   "author": "Alejandro Sanchez @alesanchezr",
   "bugs": "https://github.com/learnpack/learnpack/issues",
   "dependencies": {
@@ -30,7 +30,7 @@
     "/oclif.manifest.json",
     "/src"
   ],
-  "homepage": "https://github.com/learnpack/python-compiler",
+  "homepage": "https://github.com/learnpack/node-compiler",
   "keywords": [
     "oclif-plugin"
   ],
@@ -45,7 +45,7 @@
       "action": "./src/plugin.js"
     }
   },
-  "repository": "learnpack/python-compiler",
+  "repository": "learnpack/node-compiler",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint .",
