@@ -12,7 +12,7 @@ module.exports = {
     const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
     const inputs = (count.length == 0) ? [] : await socket.ask(count);
 
-    const header = fs.readFileSync(path.resolve(__dirname,'./_prepend.js'), "utf8");
+    const header = fs.readFileSync(path.resolve(__dirname,'./_prepend.compile.js'), "utf8");
 
     const result = await node.runSource(`${header} ${content}`, { stdin: inputs.join('\n') })
     if(result.exitCode > 0) throw CompilationError(result.stderr);

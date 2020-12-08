@@ -1,7 +1,16 @@
 const fs = require('fs')
+const babelJest = require('babel-jest');
+const path = require('path');
 const chalk = require("chalk")
 const shell = require('shelljs')
+const nodeModulesPath = path.resolve(__dirname, '../node_modules');
 const { TestingError } = require('./utils/index.js')
+
+const transformer = babelJest.createTransformer({
+  presets: [ nodeModulesPath+'/@babel/preset-env' ],
+  babelrc: false,
+  configFile: false,
+});
 
 module.exports =  {
   validate: async function({ exercise, configuration }){
@@ -19,9 +28,9 @@ module.exports =  {
       verbose: true,
       moduleDirectories: [nodeModulesPath],
       transform: {
-        "^.+\\.js?$": babelTransformPath
+        "^.+\\.js?$": transformer
       },
-      globalSetup: path.resolve(__dirname, './_node_lib.js')
+      globalSetup: path.resolve(__dirname, './_prepend.test.js')
     }
 
     const getEntry = () => {
