@@ -19,7 +19,7 @@ module.exports =  {
     return true
   },
   run: async ({ exercise, socket, configuration }) => {
-
+    
     let jestConfig = {
       verbose: true,
       moduleDirectories: [nodeModulesPath],
@@ -30,7 +30,7 @@ module.exports =  {
     }
 
     const getEntry = () => {
-
+      
       let testsPath = exercise.files.map(f => f.path).find(f => f.indexOf('test.js') > -1 || f.indexOf('tests.js') > -1);
       if (!fs.existsSync(testsPath))  throw TestingError(`🚫 No test script found on the exercise files`);
   
@@ -40,9 +40,12 @@ module.exports =  {
     const getCommands = async function(){
 
       const appPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);
-      const content = fs.readFileSync(appPath, "utf8");
-      const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
-      let answers = (count.length == 0) ? [] : await socket.ask(count);
+      let answers = []
+      if(appPath){
+        const content = fs.readFileSync(appPath, "utf8");
+        const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
+        answers = (count.length == 0) ? [] : await socket.ask(count);
+      }
       
       jestConfig.reporters = [[ __dirname+'/_reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
       return `jest --config '${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
