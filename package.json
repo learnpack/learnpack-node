@@ -1,7 +1,7 @@
 {
   "name": "learnpack-node",
   "description": "Node compiler for learnpack tutorials",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "author": "Alejandro Sanchez @alesanchezr",
   "bugs": "https://github.com/learnpack/learnpack/issues",
   "dependencies": {

@@ -39,7 +39,7 @@ module.exports =  {
 
     const getCommands = async function(){
 
-      const appPath = exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);
+      const appPath = exercise.entry || exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);
       let answers = []
       if(appPath){
         const content = fs.readFileSync(appPath, "utf8");
