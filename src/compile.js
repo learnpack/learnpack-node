@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { node } = require('compile-run');
 const { Utils, CompilationError } = require('./utils/index.js');
+const  { getPrompts } = require("./utils");
 
 module.exports = {
   validate: () => true,
@@ -11,15 +12,16 @@ module.exports = {
     if(!entryPath) throw new Error("No entry file, maybe you need to create an app.js file on the exercise folder?");
 
     const content = fs.readFileSync(entryPath, "utf8");
-    const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
-    const inputs = (count.length == 0) ? [] : await socket.ask(count);
+
+    const promptsValues = getPrompts(content);
+
+    const inputs = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
 
     const header = fs.readFileSync(path.resolve(__dirname,'./_prepend.compile.js'), "utf8");
 
     const result = await node.runSource(`${header} ${content}`, { stdin: inputs.join('\n') })
     if(result.exitCode > 0) throw CompilationError(result.stderr);
-    return Utils.cleanStdout(result.stdout, count)
-    
+    return Utils.cleanStdout(result.stdout, promptsValues)    
   },
 }
   
