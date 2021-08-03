@@ -43,8 +43,8 @@ module.exports =  {
       let answers = []
       if(appPath){
         const content = fs.readFileSync(appPath, "utf8");
-        const count = Utils.getMatches(/^([^\/])+prompt\((?:["'`]{1}(.*)["'`]{1})?\)/gm, content);
-        answers = (count.length == 0) ? [] : await socket.ask(count);
+        const promptsValues = Utils.getPrompts(content);
+        answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
       }
       
       jestConfig.reporters = [[ __dirname+'/_reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];

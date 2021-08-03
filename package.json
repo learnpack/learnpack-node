@@ -1,7 +1,7 @@
 {
   "name": "learnpack-node",
   "description": "Node compiler for learnpack tutorials",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "author": "Alejandro Sanchez @alesanchezr",
   "bugs": "https://github.com/learnpack/learnpack/issues",
   "dependencies": {
@@ -10,6 +10,8 @@
     "@babel/preset-env": "^7.12.7",
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
+    "acorn": "^8.4.1",
+    "acorn-walk": "^8.1.1",
     "babel-jest": "^26.6.3",
     "chalk": "^4.1.0",
     "compile-run": "^2.3.2",
