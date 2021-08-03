@@ -1,6 +1,4 @@
 const chalk = require("chalk");
-const acorn = require("acorn");
-const walk = require("acorn-walk");
 
 const getMatches = (reg, content) => {
   let inputs = [];
@@ -13,20 +11,6 @@ const getMatches = (reg, content) => {
     inputs.push(m[1] || null);
   }
   return inputs;
-};
-
-const getPrompts = (content) => {
-  const inputs = [];
-
-  walk.full(acorn.parse(content), (node) => {
-    if (node.type === "CallExpression") {
-      if (node.callee.name === "prompt") {
-        inputs.push(node.arguments.map((a) => a.value));
-      }
-    }
-  });
-
-  return inputs.flat();
 };
 
 const cleanStdout = (buffer, inputs) => {

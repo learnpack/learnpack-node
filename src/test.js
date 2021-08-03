@@ -3,7 +3,8 @@ const path = require('path')
 const chalk = require("chalk")
 const shell = require('shelljs')
 const transformer = require.resolve('./_babelTransformer')
-const { Utils, TestingError } = require('./utils/index.js')
+const { TestingError } = require('./utils/index.js')
+const { getPrompts } = require("./utils");
 
 let nodeModulesPath = path.dirname(require.resolve('jest'))
 nodeModulesPath = nodeModulesPath.substr(0,nodeModulesPath.indexOf("node_modules")) + "node_modules/"
@@ -43,7 +44,7 @@ module.exports =  {
       let answers = []
       if(appPath){
         const content = fs.readFileSync(appPath, "utf8");
-        const promptsValues = Utils.getPrompts(content);
+        const promptsValues = getPrompts(content);
         answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
       }
       
