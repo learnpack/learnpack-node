@@ -19,7 +19,7 @@ $ npm install -g learnpack-node
 $ oclif-example COMMAND
 running command...
 $ oclif-example (-v|--version|version)
-learnpack-node/0.0.17 darwin-x64 node-v10.17.0
+learnpack-node/0.0.18 darwin-x64 node-v14.16.0
 $ oclif-example --help [COMMAND]
 USAGE
   $ oclif-example COMMAND

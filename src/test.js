@@ -2,8 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const chalk = require("chalk")
 const shell = require('shelljs')
-const transformer = require.resolve('./_babelTransformer')
-const { TestingError } = require('./utils/index.js')
+const transformer = require.resolve('./utils/babelTransformer')
+const { TestingError } = require('learnpack/plugin')
 const { getPrompts } = require("./utils");
 
 let nodeModulesPath = path.dirname(require.resolve('jest'))
@@ -27,7 +27,7 @@ module.exports =  {
       transform: {
         "^.+\\.js?$": transformer
       },
-      globalSetup: path.resolve(__dirname, './_prepend.test.js')
+      globalSetup: path.resolve(__dirname, './utils/prepend.test.js')
     }
 
     const getEntry = () => {
@@ -48,7 +48,7 @@ module.exports =  {
         answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
       }
       
-      jestConfig.reporters = [[ __dirname+'/_reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
+      jestConfig.reporters = [[ __dirname+'/utils/reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
       return `jest --config '${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
     }
 
