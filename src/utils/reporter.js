@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const { Utils } = require('./utils/index.js')
+const { Utils } = require('learnpack/plugin')
 const { Console } = Utils
 
 class JSONReporter {

@@ -32,7 +32,7 @@ module.exports =  {
 
     const getEntry = () => {
       
-      let testsPath = exercise.files.map(f => f.path).find(f => f.indexOf('test.js') > -1 || f.indexOf('tests.js') > -1);
+      let testsPath = exercise.files.map(f => f.path).find(f => f.includes('test.js') || f.includes('tests.js'));
       if (!fs.existsSync(testsPath))  throw TestingError(`🚫 No test script found on the exercise files`);
   
       return testsPath;
@@ -40,7 +40,7 @@ module.exports =  {
 
     const getCommands = async function(){
 
-      const appPath = exercise.entry || exercise.files.map(f => './'+f.path).find(f => f.indexOf('app.js') > -1);
+      const appPath = exercise.files.map(f => './'+f.path).find(f => f.includes(exercise.entry || 'app.js'));
       let answers = []
       if(appPath){
         const content = fs.readFileSync(appPath, "utf8");
