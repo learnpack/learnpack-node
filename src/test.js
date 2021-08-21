@@ -5,26 +5,11 @@ const shell = require("shelljs");
 const transformer = require.resolve("./utils/babelTransformer");
 const { TestingError } = require("learnpack/plugin");
 const { getPrompts } = require("./utils");
-const readline = require("readline");
 
 let nodeModulesPath = path.dirname(require.resolve("jest"));
 nodeModulesPath =
   nodeModulesPath.substr(0, nodeModulesPath.indexOf("node_modules")) +
   "node_modules/";
-
-const ask = async (question) => {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  return new Promise((resolve, reject) => {
-    rl.question(`${question} `, (line) => {
-      resolve(line);
-      rl.close();
-    });
-  });
-};
 
 module.exports = {
   validate: async function ({ exercise, configuration }) {
@@ -62,20 +47,13 @@ module.exports = {
         .map((f) => "./" + f.path)
         .find((f) => f.includes(exercise.entry || "app.js"));
       let answers = [];
-      if (appPath) {
+      if (appPath && !configuration.test) {
         const content = fs.readFileSync(appPath, "utf8");
 
         const promptsValues = getPrompts(content);
 
-        if (configuration.test) {
-          const promptsResults = promptsValues.map(async (prompt) => {
-            return await ask(prompt);
-          });
-          answers = await Promise.all(promptsResults);
-        } else {
-          answers =
-            promptsValues.length === 0 ? [] : await socket.ask(promptsValues);
-        }
+        answers =
+          promptsValues.length === 0 ? [] : await socket.ask(promptsValues);
       }
 
       jestConfig.reporters = [
