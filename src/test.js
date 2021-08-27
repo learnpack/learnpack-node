@@ -4,13 +4,14 @@ const chalk = require("chalk");
 const shell = require("shelljs");
 const transformer = require.resolve("./utils/babelTransformer");
 const { TestingError } = require("learnpack/plugin");
-const { getPrompts } = require("./utils");
 
 let nodeModulesPath = path.dirname(require.resolve("jest"));
 nodeModulesPath =
   nodeModulesPath.substr(0, nodeModulesPath.indexOf("node_modules")) +
   "node_modules/";
 
+  console.log(nodeModulesPath);
+  
 module.exports = {
   validate: async function ({ exercise, configuration }) {
     if (!shell.which("jest")) {
@@ -29,7 +30,6 @@ module.exports = {
       transform: {
         "^.+\\.js?$": transformer,
       },
-      globalSetup: path.resolve(__dirname, "./utils/prepend.test.js"),
     };
 
     const getEntry = () => {
@@ -43,19 +43,6 @@ module.exports = {
     };
 
     const getCommands = async function () {
-      const appPath = exercise.files
-        .map((f) => "./" + f.path)
-        .find((f) => f.includes(exercise.entry || "app.js"));
-      let answers = [];
-      if (appPath && !configuration.test) {
-        const content = fs.readFileSync(appPath, "utf8");
-
-        const promptsValues = getPrompts(content);
-
-        answers =
-          promptsValues.length === 0 ? [] : await socket.ask(promptsValues);
-      }
-
       jestConfig.reporters = [
         [
           __dirname + "/utils/reporter.js",
@@ -67,7 +54,6 @@ module.exports = {
 
       return `jest --config '${JSON.stringify({
         ...jestConfig,
-        globals: { __stdin: answers },
         testRegex: getEntry(),
       })}' --colors`;
     };
