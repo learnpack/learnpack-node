@@ -70,7 +70,7 @@ module.exports =  {
     }
 
     let commands = await getCommands()
-
+    console.log(commands)
     if(!Array.isArray(commands)) commands = [commands]
     let stdout, stderr, code = [null, null, null]
     for(let cycle = 0; cycle < commands.length; cycle++){
