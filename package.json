@@ -1,9 +1,11 @@
 {
-  "name": "learnpack-node",
+  "name": "@learnpack/node",
   "description": "Node compiler for learnpack tutorials",
-  "version": "0.0.21",
+  "version": "1.0.0",
   "author": "Alejandro Sanchez @alesanchezr",
-  "bugs": "https://github.com/learnpack/learnpack/issues",
+  "bugs": {
+    "url": "https://github.com/learnpack/learnpack/issues"
+  },
   "dependencies": {
     "@babel/core": "^7.12.9",
     "@babel/polyfill": "^7.12.1",
@@ -44,7 +46,7 @@
   "keywords": [
     "oclif-plugin"
   ],
-  "license": "https://learnpack.co/terms",
+  "license": "UNLICENSED",
   "oclif": {
     "commands": "./src/commands",
     "bin": "oclif-example",
@@ -55,12 +57,19 @@
       "action": "./src/plugin.js"
     }
   },
-  "repository": "learnpack/node-compiler",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/learnpack/node-compiler.git"
+  },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint .",
     "prepack": "oclif-dev manifest && oclif-dev readme",
     "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
     "version": "oclif-dev readme && git add README.md"
+  },
+  "main": "app.js",
+  "directories": {
+    "test": "test"
   }
 }
