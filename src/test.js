@@ -49,7 +49,8 @@ module.exports =  {
       }
       
       jestConfig.reporters = [[ __dirname+'/utils/reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
-      return `jest --config '${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
+      
+      return `jest --config='${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() }).replace(/"/g, '\\"')}' --colors`
     }
 
     const getStdout = (rawStdout) => {
