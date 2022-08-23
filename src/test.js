@@ -23,7 +23,7 @@ module.exports =  {
     
     let jestConfig = {
       verbose: true,
-      moduleDirectories: [nodeModulesPath],
+      moduleDirectories: [path.resolve(nodeModulesPath)],
       transform: {
         "^.+\\.js?$": transformer
       },
@@ -48,9 +48,9 @@ module.exports =  {
         answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
       }
       
-      jestConfig.reporters = [[ __dirname+'/utils/reporter.js', { reportPath: `${configuration.dirPath}/reports/${exercise.slug}.json` }]];
+      jestConfig.reporters = [[ path.resolve(__dirname+'/utils/reporter.js'), { reportPath: path.resolve(`${configuration.dirPath}/reports/${exercise.slug}.json`) }]];
       
-      return `jest --config='${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() }).replace(/"/g, '\\"')}' --colors`
+      return `jest --config='${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
     }
 
     const getStdout = (rawStdout) => {
