@@ -21,7 +21,7 @@ module.exports = {
 
       const result = await node.runSource(`${header} ${content}`, { stdin: inputs.join('\n') })
       if(result.exitCode > 0) throw CompilationError(result.stderr);
-      return Utils.cleanStdout(result.stdout, promptsValues)    
+      return Utils.cleanStdout(result.stdout, promptsValues)
     }
     catch(e){
       throw CompilationError(e.message || e.msg);
