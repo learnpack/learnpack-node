@@ -22,7 +22,6 @@
     "rewire": "^5.0.0",
     "shelljs": "^0.8.4",
     "source-map-support": "^0.5.19",
-    "superagent": "^8.0.4",
     "supertest": "^6.3.1"
   },
   "devDependencies": {
@@ -37,7 +36,7 @@
     "nyc": "^14.1.1"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=14.0.0"
   },
   "files": [
     "/npm-shrinkwrap.json",
