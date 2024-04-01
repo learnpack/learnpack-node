@@ -1,7 +1,7 @@
 {
   "name": "@learnpack/node",
   "description": "Node compiler for learnpack tutorials",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "author": "Alejandro Sanchez @alesanchezr",
   "bugs": {
     "url": "https://github.com/learnpack/learnpack/issues"
@@ -18,7 +18,7 @@
     "chalk": "^4.1.0",
     "compile-run": "^2.3.2",
     "jest": "^24.8.0",
-    "learnpack": "^0.1.12",
+    "learnpack": "^0.1.27",
     "rewire": "^5.0.0",
     "shelljs": "^0.8.4",
     "source-map-support": "^0.5.19",
