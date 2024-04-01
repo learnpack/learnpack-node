@@ -19,7 +19,7 @@ $ npm install -g @learnpack/node
 $ oclif-example COMMAND
 running command...
 $ oclif-example (-v|--version|version)
-@learnpack/node/1.1.5 linux-x64 node-v16.18.1
+@learnpack/node/1.1.5 linux-x64 node-v20.11.1
 $ oclif-example --help [COMMAND]
 USAGE
   $ oclif-example COMMAND
