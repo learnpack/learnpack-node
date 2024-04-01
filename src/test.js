@@ -40,7 +40,7 @@ module.exports = {
 
     const getContent = () => {
       const appPath = exercise.files.map(f => './' + f.path).find(f => f.includes(exercise.entry || 'app.js'));
-      if (!fs.existsSync(appPath)) throw TestingError(`🚫 No entry file found on the exercise files`);
+      if (!fs.existsSync(appPath)) return ""
       return fs.readFileSync(appPath, "utf8");
     }
 
