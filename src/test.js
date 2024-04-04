@@ -45,7 +45,6 @@ module.exports = {
     }
 
     const getCommands = async function () {
-
       const appPath = exercise.files.map(f => './' + f.path).find(f => f.includes(exercise.entry || 'app.js'));
       let answers = []
       if (appPath) {
@@ -53,10 +52,19 @@ module.exports = {
         const promptsValues = getPrompts(content);
         answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
       }
-
       jestConfig.reporters = [[path.resolve(__dirname + '/utils/reporter.js'), { reportPath: path.resolve(`${configuration.dirPath}/reports/${exercise.slug}.json`) }]];
+      jestConfig.globals = { __stdin: answers };
+      jestConfig.testRegex = getEntry();
 
-      return `jest --config='${JSON.stringify({ ...jestConfig, globals: { __stdin: answers }, testRegex: getEntry() })}' --colors`
+      let jestCommand = ""
+      const isWindows = process.platform === "win32";
+      if (isWindows) {
+        jestCommand = `jest --config="${JSON.stringify(jestConfig).replace(/\\\\/g, '\\\\\\\\').replace(/"/g, '\\"')}" --colors`;
+      }
+      else {
+        jestCommand = `jest --config='${JSON.stringify(jestConfig)}' --colors`;
+      }
+      return jestCommand
     }
 
     const getStdout = (rawStdout) => {
@@ -76,7 +84,7 @@ module.exports = {
       return _stdout
     }
 
-    let commands = await getCommands()
+    let commands = await getCommands();
     if (!Array.isArray(commands)) commands = [commands]
 
     let appContent = getContent()
@@ -95,6 +103,7 @@ module.exports = {
     }
 
     result.ended_at = Date.now();
+    console.log("Code ", code);
     result.exitCode = code
     result.stdout = stdout
     result.stderr = stderr
@@ -102,7 +111,10 @@ module.exports = {
     if (code != 0) {
       result.stderr = getStdout(stdout || stderr).join()
     }
-    chalk.green("✔ All tests have passed")
+
+    if (result.stdout === undefined || !result.stdout) {
+      result.stdout = chalk.green("✅ All tests have passed")
+    }
     return result
   }
 }
