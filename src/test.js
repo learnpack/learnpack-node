@@ -9,6 +9,29 @@ const { getPrompts } = require("./utils");
 let nodeModulesPath = path.dirname(require.resolve('jest'))
 nodeModulesPath = nodeModulesPath.substr(0, nodeModulesPath.indexOf("node_modules")) + "node_modules/"
 
+const resultBuilder = {
+  init: (sourceCode) => {
+    this.starting_at = Date.now()
+    this.source_code = sourceCode
+  },
+  finish: (code, stdout, stderr) => {
+    this.ended_at = Date.now();
+    this.exitCode = code
+    this.stdout = stdout
+    this.stderr = stderr
+
+    return {
+      starting_at: this.starting_at,
+      ended_at: this.ended_at,
+      source_code: this.source_code,
+      exitCode: this.exitCode,
+      stdout: this.stdout,
+      stderr: this.stderr
+    }
+  }
+}
+
+
 module.exports = {
   validate: async function ({ exercise, configuration }) {
 
@@ -88,10 +111,7 @@ module.exports = {
     if (!Array.isArray(commands)) commands = [commands]
 
     let appContent = getContent()
-    const result = {
-      starting_at: Date.now(),
-      source_code: appContent,
-    }
+    resultBuilder.init(appContent)
 
     let stdout, stderr, code = [null, null, null]
     for (let cycle = 0; cycle < commands.length; cycle++) {
@@ -101,12 +121,7 @@ module.exports = {
       stderr = resp.stderr
       if (code != 0) break
     }
-
-    result.ended_at = Date.now();
-    console.log("Code ", code);
-    result.exitCode = code
-    result.stdout = stdout
-    result.stderr = stderr
+    const result = resultBuilder.finish(code, stdout, stderr)
 
     if (code != 0) {
       result.stderr = getStdout(stdout || stderr).join()
