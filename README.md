@@ -12,6 +12,9 @@ Node Compiler for learnpack tutorials
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 # Usage
 <!-- usage -->
 ```sh-session
@@ -19,7 +22,19 @@ $ npm install -g @learnpack/node
 $ oclif-example COMMAND
 running command...
 $ oclif-example (-v|--version|version)
-@learnpack/node/1.1.5 linux-x64 node-v16.18.1
+@learnpack/node/1.1.11 win32-x64 node-v20.10.0
+$ oclif-example --help [COMMAND]
+USAGE
+  $ oclif-example COMMAND
+...
+```
+<!-- usagestop -->
+```sh-session
+$ npm install -g @learnpack/node
+$ oclif-example COMMAND
+running command...
+$ oclif-example (-v|--version|version)
+@learnpack/node/1.1.5 linux-x64 node-v20.11.1
 $ oclif-example --help [COMMAND]
 USAGE
   $ oclif-example COMMAND
@@ -28,5 +43,7 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+
+<!-- commandsstop -->
 
 <!-- commandsstop -->
