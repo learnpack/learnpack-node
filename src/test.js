@@ -6,6 +6,15 @@ const transformer = require.resolve('./utils/babelTransformer')
 const { TestingError } = require('learnpack/plugin')
 const { getPrompts } = require("./utils");
 
+function isUsingPrompt(code) {
+  return /prompt\(/.test(code);
+}
+
+function isUsingRewire(code) {
+  return /rewire\(/.test(code);
+}
+
+
 let nodeModulesPath = path.dirname(require.resolve('jest'))
 nodeModulesPath = nodeModulesPath.substr(0, nodeModulesPath.indexOf("node_modules")) + "node_modules/"
 
@@ -36,14 +45,12 @@ module.exports = {
   validate: async function ({ exercise, configuration }) {
 
     if (!shell.which('jest')) {
-      const packageName = "jest@24.8.0";
+      const packageName = "jest@29.7.0";
       throw TestingError(`🚫 You need to have ${packageName} installed to run test the exercises, run $ npm i ${packageName} -g`);
     }
-
     return true
   },
   run: async ({ exercise, socket, configuration }) => {
-
     let jestConfig = {
       verbose: true,
       moduleDirectories: [path.resolve(nodeModulesPath)],
@@ -64,17 +71,23 @@ module.exports = {
     const getContent = () => {
       const appPath = exercise.files.map(f => './' + f.path).find(f => f.includes(exercise.entry || 'app.js'));
       if (!fs.existsSync(appPath)) return ""
+      // Create a new file with the content of the app.js, with name: temporal.js
+
+
+
       return fs.readFileSync(appPath, "utf8");
     }
 
     const getCommands = async function () {
-      const appPath = exercise.files.map(f => './' + f.path).find(f => f.includes(exercise.entry || 'app.js'));
+      // const appPath = exercise.files.map(f => './' + f.path).find(f => f.includes(exercise.entry || 'app.js'));
+
+
       let answers = []
-      if (appPath) {
-        const content = fs.readFileSync(appPath, "utf8");
-        const promptsValues = getPrompts(content);
-        answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
-      }
+      // if (appPath) {
+      //   const content = fs.readFileSync(appPath, "utf8");
+      //   const promptsValues = getPrompts(content);
+      //   answers = (promptsValues.length === 0) ? [] : await socket.ask(promptsValues);
+      // }
       jestConfig.reporters = [[path.resolve(__dirname + '/utils/reporter.js'), { reportPath: path.resolve(`${configuration.dirPath}/reports/${exercise.slug}.json`) }]];
       jestConfig.globals = { __stdin: answers };
       jestConfig.testRegex = getEntry();
@@ -113,6 +126,23 @@ module.exports = {
     let appContent = getContent()
     resultBuilder.init(appContent)
 
+    const testPath = getEntry();
+    const testContent = fs.readFileSync(testPath, "utf8");
+
+    if (isUsingPrompt(appContent) && isUsingRewire(testContent)) {
+      const modifiedContent = `const prompt = (message) => { return "" }\n\n\n${appContent}`;
+      fs.writeFileSync(exercise.path + "/temporal.js", modifiedContent);
+
+      const testPath = getEntry();
+      const testContent = fs.readFileSync(testPath, "utf8");
+
+      // TODO: Use the exercise.entry instead of app.js only to cover all the cases
+      const modifiedTestContent = testContent.replace(/app\.js/g, "temporal.js");
+
+      fs.writeFileSync(testPath, modifiedTestContent);
+    }
+
+
     let stdout, stderr, code = [null, null, null]
     for (let cycle = 0; cycle < commands.length; cycle++) {
       let resp = shell.exec(commands[cycle], { silent: true })
@@ -130,6 +160,12 @@ module.exports = {
     if (result.stdout === undefined || !result.stdout) {
       result.stdout = chalk.green("✅ All tests have passed")
     }
+
+    // Delete temporal files
+    if (fs.existsSync(exercise.path + "/temporal.js")) {
+      fs.unlinkSync(exercise.path + "/temporal.js");
+    }
+
     return result
   }
 }

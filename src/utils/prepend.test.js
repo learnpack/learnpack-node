@@ -14,7 +14,6 @@ module.exports = async (something) => {
       global.prompt = () => stdin.shift();
       window.prompt = () => stdin.shift();
     }
-
   }
 
 };

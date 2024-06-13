@@ -22,7 +22,7 @@ $ npm install -g @learnpack/node
 $ oclif-example COMMAND
 running command...
 $ oclif-example (-v|--version|version)
-@learnpack/node/1.1.11 win32-x64 node-v20.10.0
+@learnpack/node/1.1.13 win32-x64 node-v20.10.0
 $ oclif-example --help [COMMAND]
 USAGE
   $ oclif-example COMMAND
