@@ -40,6 +40,9 @@ const resultBuilder = {
   }
 }
 
+// (Optional) path to the setup file
+const rootDir = path.dirname(require.main.filename);
+const setupFilePath = path.join(rootDir, 'jest.setup.js');
 
 module.exports = {
   validate: async function ({ exercise, configuration }) {
@@ -51,13 +54,18 @@ module.exports = {
     return true
   },
   run: async ({ exercise, socket, configuration }) => {
+
+    // Check if the setup file exists
+    const setupFilesAfterEnv = fs.existsSync(setupFilePath) ? [setupFilePath] : [];
+    
     let jestConfig = {
       verbose: true,
       moduleDirectories: [path.resolve(nodeModulesPath)],
       transform: {
         "^.+\\.js?$": transformer
       },
-      globalSetup: path.resolve(__dirname, './utils/prepend.test.js')
+      globalSetup: path.resolve(__dirname, './utils/prepend.test.js'),
+      setupFilesAfterEnv
     }
 
     const getEntry = () => {
